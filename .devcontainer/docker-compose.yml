@@ -1,0 +1,114 @@
+# This file is used to define the services and networks for the development environment.
+x-common-env: &common-variables # Containers will be setted to the same time zone as the host
+  TZ: 'Europe/Istanbul'
+  WIREMOCK_PORT: 80
+
+networks:
+  wiremock_devnet:
+    name: wiremock_devnet
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.11.0/24
+
+services:
+  wiremock:
+    image: cemt/wiremock:3.13.1
+    build:
+      context: ./services/wiremock/build
+      dockerfile: Dockerfile-wiremock
+    # entrypoint: ['/docker-entrypoint.sh']
+    # command:
+    #   [
+    #     '--global-response-templating',
+    #     '--disable-gzip',
+    #     '--verbose',
+    #     '--port',
+    #     '${WIREMOCK_PORT}',
+    #     '--root-dir',
+    #     '/home/wiremock',
+    #     '--proxy-all=http://devcontainer:8080',
+    #     '--extensions',
+    #     'org.wiremock.webhooks.Webhooks',
+    #     'com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer'
+    #   ]
+    healthcheck:
+      test:
+        - 'CMD-SHELL'
+        - 'curl -f http://localhost:${WIREMOCK_PORT}/__admin/health || exit 1'
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    environment:
+      <<: *common-variables
+    # ports:
+    #   - '80:80'
+    working_dir: /home/wiremock
+    volumes:
+      - ${WORKSPACE_PATH_ON_HOST}:${WORKSPACE_PATH_ON_HOST}:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.ssh:/root/.ssh:ro
+      - ~/.gitconfig:/root/.gitconfig:ro
+      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:/home/wiremock/mappings+files
+      - ${WORKSPACE_PATH_ON_HOST}/.devcontainer/services/wiremock/volume/extensions:/var/wiremock/extensions
+    tty: true
+    networks:
+      wiremock_devnet:
+        aliases:
+          - devcontainer
+
+  wiremock_ui:
+    image: 'holomekc/wiremock-gui:latest'
+    container_name: wiremock_ui
+    ports:
+      # This is just an example of a port mapping
+      - '8088:8089'
+      - '8084:8088'
+    command: '--port 8089 --https-port 8088 --max-request-journal 1000 --local-response-templating'
+    volumes:
+      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:/home/wiremock
+    environment:
+      WIREMOCK_MY_VAR: 'systemValue response templating feature'
+    networks:
+      wiremock_devnet:
+        aliases:
+          - wiremock_ui
+
+  wiremock_test:
+    container_name: wiremock_test
+    image: cemt/wiremock:3.13.1
+    entrypoint: ['/docker-entrypoint.sh']
+    command:
+      [
+        '--global-response-templating',
+        '--disable-gzip',
+        '--verbose',
+        '--port',
+        '${WIREMOCK_PORT}',
+        '--root-dir',
+        '/home/wiremock/mappings+files',
+        '--proxy-all=http://google.com',
+        '--extensions',
+        'org.wiremock.webhooks.Webhooks',
+        'com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer'
+      ]
+    environment:
+      <<: *common-variables
+    ports:
+      - '80:${WIREMOCK_PORT}'
+    working_dir: /home/wiremock
+    volumes:
+      - ${WORKSPACE_PATH_ON_HOST}:${WORKSPACE_PATH_ON_HOST}:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ~/.ssh:/root/.ssh:ro
+      - ~/.gitconfig:/root/.gitconfig:ro
+      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:/home/wiremock/mappings+files
+      - ${WORKSPACE_PATH_ON_HOST}/.devcontainer/services/wiremock/volume/extensions:/var/wiremock/extensions
+    tty: true
+    networks:
+      wiremock_devnet:
+        aliases:
+          - wiremock-test
+          - wiremock
+          - test

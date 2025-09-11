@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/now"
+  },
+  "response": {
+    "status": 200,
+    "body": "{{now timezone='Europe/Istanbul'}}",
+    // Test:
+    // curl http://test/now
+    // 2025-09-11T19:19:10+03:00
+
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

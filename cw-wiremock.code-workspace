@@ -1,0 +1,121 @@
+{
+    "folders": [
+        {
+            "name": "all",
+            "path": "."
+        },
+        {
+            "name": "/home/wiremock/mappings+files",
+            "path": "/home/wiremock/mappings+files"
+        },
+        {
+            "name": "/var/wiremock",
+            "path": "/var/wiremock"
+        }
+    ],
+    "settings": {
+        // "editor.fontSize": 14,
+        // "terminal.integrated.fontSize": 14,
+        "terminal.integrated.scrollback": 10000,
+        "workbench.colorCustomizations": {
+            "activityBar.activeBackground": "#976edc",
+            "activityBar.background": "#976edc",
+            "activityBar.foreground": "#15202b",
+            "activityBar.inactiveForeground": "#15202b99",
+            "activityBarBadge.background": "#80431f",
+            "activityBarBadge.foreground": "#e7e7e7",
+            "commandCenter.border": "#e7e7e799",
+            "sash.hoverBorder": "#976edc",
+            "statusBar.background": "#7945d2",
+            "statusBar.foreground": "#e7e7e7",
+            "statusBarItem.hoverBackground": "#976edc",
+            "statusBarItem.remoteBackground": "#7945d2",
+            "statusBarItem.remoteForeground": "#e7e7e7",
+            "titleBar.activeBackground": "#7945d2",
+            "titleBar.activeForeground": "#e7e7e7",
+            "titleBar.inactiveBackground": "#7945d299",
+            "titleBar.inactiveForeground": "#e7e7e799"
+        },
+        "peacock.remoteColor": "#7945d2"
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [],
+        "compounds": []
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "echo",
+                "type": "shell",
+                "command": "echo ${workspaceFolder}"
+            },
+            {
+                "label": "start or restart wiremock_test",
+                "type": "shell",
+                "command": "if [ $(docker ps -q -f name=wiremock_test) ]; then docker restart wiremock_test; else docker compose -f .devcontainer/docker-compose.yml up -d wiremock_test; fi",
+                "problemMatcher": [],
+                "options": {
+                    "cwd": "${workspaceFolder:all}/wiremock-playground"
+                }
+            },
+            {
+                "label": "stop wiremock_test",
+                "type": "shell",
+                "command": "docker stop wiremock_test",
+                "problemMatcher": []
+            },
+            {
+                "label": "show logs wiremock_test",
+                "type": "shell",
+                "command": "docker logs -f wiremock_test",
+                "problemMatcher": []
+            },
+            {
+                "label": "open wiremock_test bash",
+                "type": "shell",
+                "command": "docker exec -it wiremock_test bash",
+                "problemMatcher": []
+            },
+            {
+                "label": "install dependencies",
+                "type": "shell",
+                "command": "npm install"
+            },
+            {
+                "label": "start AIRTEL",
+                "type": "shell",
+                "command": "npm start",
+                "options": {
+                    "env": {
+                        "A3GW_SERVER": "airtel",
+                        "VITE_THEME_MODE": "airtel"
+                    }
+                }
+            },
+            {
+                "label": "start TELECEL",
+                "type": "shell",
+                "command": "npm start",
+                "options": {
+                    "env": {
+                        "A3GW_SERVER": "telecel",
+                        "VITE_THEME_MODE": "telecel"
+                    }
+                }
+            },
+            {
+                "label": "start ZAIN",
+                "type": "shell",
+                "command": "npm start",
+                "options": {
+                    "env": {
+                        "A3GW_SERVER": "zain",
+                        "VITE_THEME_MODE": "zain"
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,100 @@
+# wiremock/wiremock:3.13.1 yerine en baştan başlıyoruz:
+FROM eclipse-temurin:11-jre AS base
+
+USER root
+RUN apt-get update
+RUN apt-get install -y ca-certificates curl gnupg lsb-release bash-completion && \
+    mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
+    | tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt-get install -y docker.io
+# RUN apt-get update && \
+#     apt-get install -y docker-ce-cli
+# --- Docker CLI Ayarları ----------------------------------------------------
+# Docker CLI ve bash/zsh completion yükle
+# RUN apt-get update && \
+#     apt-get install -y ca-certificates curl gnupg lsb-release bash-completion && \
+#     mkdir -p /etc/apt/keyrings && \
+#     curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+#     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" \
+#     | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+#     apt-get update && \
+#     apt-get install -y docker-ce-cli && \
+#     # rm -rf /var/lib/apt/lists/* && \
+# # Zsh için completion yükle
+#     # mkdir -p /usr/share/zsh/vendor-completions && \
+#     # docker completion zsh > /usr/share/zsh/vendor-completions/_docker && \
+# # Bash için completion yükle
+#     mkdir -p /etc/bash_completion.d && \
+#     docker completion bash > /etc/bash_completion.d/docker
+
+# --- Wiremock Ayarları ------------------------------------------------------
+ENV WIREMOCK_VERSION=3.13.1
+ENV WIREMOCK_PORT=8080
+WORKDIR /var/wiremock
+
+# WireMock jar'ını indir
+RUN set -eux; \
+    mkdir -p /var/wiremock/lib; \
+    mkdir -p /var/wiremock/extensions; \
+    wget -q https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/${WIREMOCK_VERSION}/wiremock-standalone-${WIREMOCK_VERSION}.jar -O /var/wiremock/lib/wiremock.jar
+
+# WireMock eklentilerini indir
+RUN set -eux; \
+    cd /var/wiremock/extensions; \
+    wget -q https://repo1.maven.org/maven2/com/opentable/wiremock-body-transformer/1.1.3/wiremock-body-transformer-1.1.3.jar && \
+    wget -q https://repo1.maven.org/maven2/org/wiremock/wiremock-webhooks-extension/3.0.4/wiremock-webhooks-extension-3.0.4.jar && \
+    wget -q https://repo1.maven.org/maven2/org/wiremock/wiremock-grpc-extension-standalone/0.9.0/wiremock-grpc-extension-standalone-0.9.0.jar && \
+    wget -q https://repo1.maven.org/maven2/org/wiremock/extensions/wiremock-state-extension-standalone/0.9.3/wiremock-state-extension-standalone-0.9.3.jar && \
+    wget -q https://repo1.maven.org/maven2/org/wiremock/extensions/wiremock-jwt-extension-standalone/0.3.0/wiremock-jwt-extension-standalone-0.3.0.jar && \
+    wget -q https://repo1.maven.org/maven2/org/wiremock/extensions/wiremock-faker-extension-standalone/0.2.0/wiremock-faker-extension-standalone-0.2.0.jar
+
+EXPOSE 8080 8443
+
+# docker-entrypoint.sh dosyasını kopyala ve çalıştırılabilir yap
+COPY ./docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Healthcheck ekle
+HEALTHCHECK --interval=5s --start-period=5s --timeout=3s --retries=3 \
+    CMD curl -f http://localhost:$WIREMOCK_PORT/__admin/health || exit 1
+
+
+# --- wiremock KULLANICISI OLUŞTURMAK -----------------------------------------
+# `USER wiremock` koymak ve home directory oluşturmak şunları sağlıyor:
+# `/home/wiremock` artık gerçekten var, chown sorunsuz çalışır.
+# Container içindeki default işlemci artık root değil wiremock kullanıcısı oluyor.
+# Yani güvenlik açısından daha iyi.
+# Eğer yine uid parametresi verilirse, `docker-entrypoint.sh` onu `gosu` ile kullanır; verilmezse zaten wiremock kullanıcısı ile çalışır.
+# Yani kısaca: `USER wiremock` koymak, `docker-entrypoint.sh`’ın UID mantığını güvenli ve anlamlı hâle getiriyor.
+# Yoksa uid parametresi verilse bile, home directory ve ownership olmadığı için hata alırsın.
+#
+# WireMock kullanıcısı ve docker grubuna ekleme ve home directory oluşturma
+# WireMock grubu yoksa oluştur
+# WireMock kullanıcısı yoksa oluştur
+RUN groupmod -g 1001 docker
+RUN groupadd -r wiremock
+RUN useradd -m -d /home/wiremock -s /bin/bash -g wiremock wiremock
+RUN usermod -aG docker wiremock
+
+# WireMock home directory izinlerini ayarla
+RUN chown -R wiremock:wiremock /home/wiremock /var/wiremock
+
+# WireMock başlat (docker-entrypoint.sh üzerinden)
+USER wiremock
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# CMD [
+#     '--global-response-templating',
+#     '--disable-gzip',
+#     '--verbose',
+#     '--port',
+#     '${WIREMOCK_PORT}',
+#     '--root-dir',
+#     '/home/wiremock',
+#     '--proxy-all=http://devcontainer:8080',
+#     '--extensions',
+#     'org.wiremock.webhooks.Webhooks',
+#     'com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer'
+# ]

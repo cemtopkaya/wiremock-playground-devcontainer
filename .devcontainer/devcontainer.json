@@ -1,0 +1,165 @@
+{
+    "name": "Wiremock Playground",
+    "dockerComposeFile": [
+        "./docker-compose.yml"
+    ],
+    "service": "wiremock",
+    // "runServices": [
+    //   "wiremock",
+    //   "wiremock_ui"
+    //   "wiremock_test"
+    // ],
+    "remoteEnv": {
+        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
+        "COMPOSE_PROJECT_NAME": "wiremock_playground",
+        "WORKSPACE_PATH_ON_HOST": "${WORKSPACE_PATH_ON_HOST}",
+        "WIREMOCK_PORT": "${WIREMOCK_PORT}"
+    },
+    "containerEnv": {
+        "WORKSPACE_PATH_ON_HOST": "${WORKSPACE_PATH_ON_HOST}",
+        "COMPOSE_PROJECT_NAME": "wiremock_playground",
+        "WIREMOCK_PORT": "${WIREMOCK_PORT}"
+    },
+    "workspaceFolder": "${localWorkspaceFolder}",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // Source Control and Collaboration
+                "donjayamanne.githistory", // Provides a visual Git history.
+                "nico-mayer.git-differ", // Effortlessly compare any file in your project with local or remote Git branches
+                "MS-vsliveshare.vsliveshare", // Enables real-time code collaboration.
+                "evertjunior.llm-commit", // Generates commit messages using an LLM.
+                // Code Formatting and Linting
+                "dbaeumer.vscode-eslint", // Integrates ESLint for code quality and style.
+                "esbenp.prettier-vscode", // Formats code automatically with Prettier.
+                "EditorConfig.EditorConfig", // Ensures consistent code styles across editors.
+                // Language and Snippets
+                "formulahendry.auto-rename-tag", // Automatically renames paired HTML/XML tags.
+                "christian-kohler.path-intellisense", // Autocompletes filenames and paths.
+                // Testing and Development
+                "ritwickdey.LiveServer", // Launches a local development server with live reload.
+                "formulahendry.code-runner", // Runs code snippets or files of various languages.
+                // Cloud and Containerization
+                "ms-azuretools.vscode-docker", // Integrates Docker commands and management.
+                // Utilities and Tools
+                "mushan.vscode-paste-image", // Easily pastes images from the clipboard.
+                "in4margaret.compareit", // Compares two files or selections.
+                "hanskre.markdown-execute", // Executes code blocks in Markdown files.
+                "lukaserat.npm-scripts", // Provides NPM script support.
+                "humao.rest-client", // Sends HTTP requests and views responses in VS Code.
+                "PKief.material-icon-theme", // Applies material design icons for files and folders.
+                "herdingbits.file-focus", // Re-organize frequently accessed and important files in virtual folders
+                "buenon.scratchpads" // Create multiple scratchpad files for doodling while you're coding.
+            ],
+            "settings": {
+                // ==== VS Code çekirdek ayarları (Global) ==========================================================
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.scrollback": 90000,
+                // ==== Dosya ayarları ==============================================================================
+                "files.trimTrailingWhitespace": true,
+                "files.insertFinalNewline": true,
+                // ==== Editor davranışları (Global) =================================================================
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
+                "editor.detectIndentation": false,
+                "editor.tabSize": 4,
+                "editor.insertSpaces": true,
+                "editor.codeActionsOnSave": {
+                    "source.fixAll.eslint": "explicit",
+                    "source.organizeImports": "explicit"
+                },
+                // ==== Dil servisi ayarları (Global) ===============================================================
+                "javascript.preferences.quoteStyle": "single",
+                "typescript.preferences.quoteStyle": "single",
+                // ==== Dil bazlı özel ayarlar ======================================================================
+                "[json]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true,
+                    "editor.tabSize": 2,
+                    "editor.insertSpaces": true
+                },
+                "[javascript]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[javascriptreact]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[typescript]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[typescriptreact]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[markdown]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[html]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[css]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[scss]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[less]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[graphql]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[vue]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[svelte]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                "[astro]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
+                // ==== Prettier ayarları (Global) ===================================================================
+                "prettier.trailingComma": "none",
+                "prettier.singleQuote": true,
+                "prettier.semi": true,
+                "prettier.tabWidth": 2,
+                "prettier.printWidth": 100,
+                "prettier.bracketSpacing": true,
+                "prettier.arrowParens": "avoid",
+                "prettier.endOfLine": "lf",
+                // ==== Extension ayarları (Global) =================================================================
+                // ==== LLM Commit Settings ========================================================================
+                "llm-commit.provider": "custom",
+                "llm-commit.apiUrl": "http://192.168.1.180:1234/v1/chat/completions",
+                "llm-commit.prompt": "Act as a Git expert specializing in professional commit message standards. Your task is to analyze code changes and generate a detailed Git commit message in plaintext format (no Markdown or code blocks). The message should have three parts: a single-line subject, a multi-line body explaining the changes in detail, and a footer listing the changed files. The subject must follow the `<type>: <description>` format. Use imperative, present-tense verbs.\n\n**Commit Types:**\n- feat|fix|docs|style|refactor|test|chore \n- feat: A new feature is introduced.\n- fix: A bug is fixed.\n- If changed files include *.md, type MUST be `docs`.\n- docs: Documentation is updated or added.\n- style: Code formatting changes.\n- refactor: Code restructuring.\n- test: Test changes.\n- chore: Build or tool changes.\n\n**Instructions:**\n1. Generate the commit message strictly as plaintext.\n2. Do not wrap the output in Markdown (e.g., no ``` or **).\n3. The footer must start with 'Changed files:' on a new line.\n4. **STRICTLY FORBIDDEN:** Markdown, code blocks (```), backticks (`), bold/italic symbols.\n\nCode changes to analyze:\ndiff\n{diff}",
+                "llm-commit.model": "qwen/qwen2.5-coder-14b",
+                // ==== Material Icons Settings ====================================================================
+                "material-icon-theme.activeIconPack": "react",
+                "material-icon-theme.folders.theme": "specific",
+                "material-icon-theme.files.color": "#90a4ae",
+                "material-icon-theme.folders.color": "#90a4ae"
+            }
+        },
+        "forwardPorts": [
+            5173
+        ]
+    },
+    "containerUser": "root",
+    "initializeCommand": "echo --------- && pwd && ./.devcontainer/scripts/initializeCommand.sh"
+}
