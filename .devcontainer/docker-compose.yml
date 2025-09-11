@@ -35,7 +35,7 @@ services:
     healthcheck:
       test:
         - 'CMD-SHELL'
-        - 'curl -f http://localhost:${WIREMOCK_PORT}/__admin/health || exit 1'
+        - 'ls -al /var/wiremock || exit 1'
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -70,6 +70,14 @@ services:
       - ${WORKSPACE_PATH_ON_HOST}/mappings+files:/home/wiremock
     environment:
       WIREMOCK_MY_VAR: 'systemValue response templating feature'
+    healthcheck:
+      test:
+        - 'CMD-SHELL'
+        - 'curl http://localhost:8089 || exit 1'
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
     networks:
       wiremock_devnet:
         aliases:

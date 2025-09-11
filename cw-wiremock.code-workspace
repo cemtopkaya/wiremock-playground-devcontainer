@@ -57,7 +57,7 @@
                 "command": "if [ $(docker ps -q -f name=wiremock_test) ]; then docker restart wiremock_test; else docker compose -f .devcontainer/docker-compose.yml up -d wiremock_test; fi",
                 "problemMatcher": [],
                 "options": {
-                    "cwd": "${workspaceFolder:all}/wiremock-playground"
+                    "cwd": "${workspaceFolder:all}"
                 }
             },
             {

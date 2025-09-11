@@ -5,11 +5,13 @@
   },
   "response": {
     "status": 200,
-    "body": "{{now timezone='Europe/Istanbul'}}",
-    // Test:
-    // curl http://test/now
-    // 2025-09-11T19:19:10+03:00
-
+    "jsonBody": {
+      "now": "{{now timezone='Europe/Istanbul'}}",
+      "after": "{{now timezone='Europe/Istanbul' offset='now +5 hours'}}",
+      "before": "{{now timezone='Europe/Istanbul' offset='now -11 minutes'}}",
+      "epoch": "{{now format='epoch'}}",
+      "unix": "{{now format='unix'}}"
+    },
     "transformers": ["response-template"],
     "headers": {
       "Content-Type": "application/json"
