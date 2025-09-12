@@ -87,8 +87,6 @@ RUN chown -R wiremock:wiremock /home/wiremock /var/wiremock
 
 WORKDIR /var/wiremock
 
-VOLUME [ "/home/wiremock/grpc", "/home/wiremock/mappings", "/home/wiremock/__files", "/home/wiremock/state" ]
-
 # WireMock başlat (docker-entrypoint.sh üzerinden)
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
