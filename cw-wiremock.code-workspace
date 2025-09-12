@@ -14,8 +14,9 @@
         }
     ],
     "settings": {
-        // "editor.fontSize": 14,
-        // "terminal.integrated.fontSize": 14,
+        "editor.fontSize": 14,
+        "terminal.integrated.fontSize": 14,
+        "terminal.integrated.defaultProfile.linux": "/usr/bin/zsh",
         "terminal.integrated.scrollback": 10000,
         "workbench.colorCustomizations": {
             "activityBar.activeBackground": "#976edc",
@@ -64,56 +65,27 @@
                 "label": "stop wiremock_test",
                 "type": "shell",
                 "command": "docker stop wiremock_test",
-                "problemMatcher": []
+                "problemMatcher": [],
+                "options": {
+                    "cwd": "${workspaceFolder:all}"
+                }
             },
             {
                 "label": "show logs wiremock_test",
                 "type": "shell",
                 "command": "docker logs -f wiremock_test",
-                "problemMatcher": []
+                "problemMatcher": [],
+                "options": {
+                    "cwd": "${workspaceFolder:all}"
+                }
             },
             {
                 "label": "open wiremock_test bash",
                 "type": "shell",
                 "command": "docker exec -it wiremock_test bash",
-                "problemMatcher": []
-            },
-            {
-                "label": "install dependencies",
-                "type": "shell",
-                "command": "npm install"
-            },
-            {
-                "label": "start AIRTEL",
-                "type": "shell",
-                "command": "npm start",
+                "problemMatcher": [],
                 "options": {
-                    "env": {
-                        "A3GW_SERVER": "airtel",
-                        "VITE_THEME_MODE": "airtel"
-                    }
-                }
-            },
-            {
-                "label": "start TELECEL",
-                "type": "shell",
-                "command": "npm start",
-                "options": {
-                    "env": {
-                        "A3GW_SERVER": "telecel",
-                        "VITE_THEME_MODE": "telecel"
-                    }
-                }
-            },
-            {
-                "label": "start ZAIN",
-                "type": "shell",
-                "command": "npm start",
-                "options": {
-                    "env": {
-                        "A3GW_SERVER": "zain",
-                        "VITE_THEME_MODE": "zain"
-                    }
+                    "cwd": "${workspaceFolder:all}"
                 }
             }
         ]
