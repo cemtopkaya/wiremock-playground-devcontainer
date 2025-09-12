@@ -9,8 +9,6 @@ ENV WIREMOCK_PORT=8080
 RUN apt-get update && \
     apt-get install -y ca-certificates gnupg git wget curl nano jq yq xq
 
-WORKDIR /var/wiremock
-
 # WireMock jar'ını indir
 RUN set -eux; \
     mkdir -p /var/wiremock/lib; \
@@ -23,6 +21,7 @@ RUN set -eux; \
     wget -q https://repo1.maven.org/maven2/com/opentable/wiremock-body-transformer/1.1.3/wiremock-body-transformer-1.1.3.jar && \
     wget -q https://repo1.maven.org/maven2/org/wiremock/wiremock-webhooks-extension/3.0.4/wiremock-webhooks-extension-3.0.4.jar && \
     wget -q https://repo1.maven.org/maven2/org/wiremock/wiremock-grpc-extension-standalone/0.9.0/wiremock-grpc-extension-standalone-0.9.0.jar && \
+    mkdir -p /home/wiremock/grpc && \
     wget -q https://repo1.maven.org/maven2/org/wiremock/extensions/wiremock-state-extension-standalone/0.9.3/wiremock-state-extension-standalone-0.9.3.jar && \
     wget -q https://repo1.maven.org/maven2/org/wiremock/extensions/wiremock-jwt-extension-standalone/0.3.0/wiremock-jwt-extension-standalone-0.3.0.jar && \
     wget -q https://repo1.maven.org/maven2/org/wiremock/extensions/wiremock-faker-extension-standalone/0.2.0/wiremock-faker-extension-standalone-0.2.0.jar
@@ -86,7 +85,10 @@ RUN useradd -m -d /home/wiremock -s /usr/bin/zsh -g wiremock wiremock
 # WireMock home directory izinlerini ayarla
 RUN chown -R wiremock:wiremock /home/wiremock /var/wiremock
 
-SHELL ["/usr/bin/zsh", "-c"]
+WORKDIR /var/wiremock
+
+VOLUME [ "/home/wiremock/grpc", "/home/wiremock/mappings", "/home/wiremock/__files", "/home/wiremock/state" ]
+
 # WireMock başlat (docker-entrypoint.sh üzerinden)
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
