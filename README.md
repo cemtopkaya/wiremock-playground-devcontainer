@@ -51,6 +51,311 @@ Matched-Stub-Id: 99d3c4be-628f-4aea-a09b-0339d2602ba9
 ```
 
 
+## json Eklentisi
+
+### parseJson 1
+
+```json
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/parsejson1"
+  },
+  "response": {
+    "status": 200,
+    "body": "{{#parseJson 'parsedObj'}}{ \"name\": \"transformed\" }{{/parseJson}}{{parsedObj}}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+```
+
+```rest
+GET http://test/parsejson1 HTTP/1.1
+```
+
+Sonuç:
+
+```text
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+Matched-Stub-Id: 31556ae2-d850-4df3-bf3c-f5dd09bb4666
+
+{name=transformed}
+```
+
+
+### parseJson 2
+
+```json
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/parsejson2"
+  },
+  "response": {
+    "status": 200,
+    "body": "{{#parseJson 'parsedObj'}}{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"uid\": 311, \"username\": \"admin\" } }{{/parseJson}}{{parsedObj}}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+```
+
+```rest
+GET http://test/parsejson2 HTTP/1.1
+```
+
+Sonuç:
+
+```text
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+Matched-Stub-Id: edb8b0a7-4c21-4a5e-a21f-158199325aae
+
+{cmpfToken={hash=6bfa249f, uid=311, username=admin}}
+```
+
+
+### parseJson 3 toJson 1
+
+```json
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/parsejson3toJson"
+  },
+  "response": {
+    "status": 200,
+    "body": "{{#parseJson 'parsedObj'}}{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"uid\": 311, \"username\": \"admin\" } }{{/parseJson}}{{parsedObj}}{{toJson parsedObj}}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+```
+
+```rest
+GET http://test/parsejson3toJson HTTP/1.1
+```
+
+Sonuç:
+
+```text
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+Matched-Stub-Id: d6b1be4a-d0f4-4b36-8c6b-e618f486c95b
+
+{cmpfToken={hash=6bfa249f, uid=311, username=admin}}{
+  "cmpfToken" : {
+    "hash" : "6bfa249f",
+    "uid" : 311,
+    "username" : "admin"
+  }
+}
+```
+
+
+### toJson 2
+
+```json
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/toJson"
+  },
+  "response": {
+    "status": 200,
+    "body": "{{toJson (array 1 2 3) }}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+```
+
+```rest
+GET http://test/toJson HTTP/1.1
+```
+
+Sonuç:
+
+```text
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+Matched-Stub-Id: 2755e08b-dada-4559-83d1-d5e8ad35ea39
+
+[
+  1,
+  2,
+  3
+]
+```
+
+### jsonPath 1
+
+```json
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/jsonPath1",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"username\":\"admin\",\"password\":\"test\",\"rememberMe\":false}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"keywords\": \"{{{jsonPath request.body '$.username'}}}\"}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+```
+
+```rest
+POST http://test/jsonPath1 HTTP/1.1
+
+{
+    "username":"admin",
+    "password":"test",
+    "rememberMe":false
+}
+```
+
+Sonuç:
+
+```text
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+Matched-Stub-Id: ae2348f3-a1d8-4bbc-ae16-6b1a056e25c5
+
+{
+  "keywords": "admin"
+}
+```
+
+
+### parseJson 5
+
+```json
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/jsonPath2",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"username\":\"admin\",\"password\":\"test\",\"rememberMe\":false}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": { "keywords": {{{jsonPath request.body '$'}}}},
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
+```
+
+```rest
+POST http://test/jsonPath2 HTTP/1.1
+
+{
+    "username":"admin",
+    "password":"test",
+    "rememberMe":false
+}
+```
+
+Sonuç:
+
+```text
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+Matched-Stub-Id: d8fa79f6-6811-470d-9a6c-618da5a6dda2
+
+{
+  "keywords": {
+    "username": "admin",
+    "password": "test",
+    "rememberMe": false
+  }
+}
+```
+
+
+### parseJson 6 jsonPath 2
+
+```json
+```
+
+```rest
+POST http://test/parsejson3jsonPath HTTP/1.1
+
+{
+    "username":"admin",
+    "password":"test",
+    "rememberMe":false
+}
+```
+
+Sonuç:
+
+```text
+```
+
+
+### parseJson 7
+
+```json
+```
+
+```rest
+GET http://test/now HTTP/1.1
+```
+
+Sonuç:
+
+```text
+```
+
+
+### parseJson 8
+
+```json
+```
+
+```rest
+GET http://test/now HTTP/1.1
+```
+
+Sonuç:
+
+```text
+```
+
 ### JWT Eklentisiyle Token Üretmek
 
 ```json

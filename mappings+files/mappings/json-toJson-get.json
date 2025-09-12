@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/toJson"
+  },
+  "response": {
+    "status": 200,
+    "body": "{{toJson (array 1 2 3) }}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

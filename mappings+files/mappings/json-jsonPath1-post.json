@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/jsonPath1",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"username\":\"admin\",\"password\":\"test\",\"rememberMe\":false}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"keywords\": \"{{{jsonPath request.body '$.username'}}}\"}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

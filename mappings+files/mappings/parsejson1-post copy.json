@@ -1,0 +1,69 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/parsejson1",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"username\":\"admin\",\"password\":\"test\",\"rememberMe\":false}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{{#parseJson 'cem'}}{  \"cmpfToken\": {    \"hash\": \"6bfa249f\",    \"token\": \"95ce31a5\",    \"uid\": 311,    \"oid\": 282  },  \"username\": \"ertugruls@telenity.com\"}{{/parseJson}} {{{jwt maxAge='1 hours' sub=(toString cem) }}}",
+
+
+    // Basit örnek 8:
+    // "body": "{{#parseJson 'cem'}}{  \"cmpfToken\": {    \"hash\": \"6bfa249f\",    \"token\": \"95ce31a5\",    \"uid\": 311,    \"oid\": 282  },  \"username\": \"ertugruls@telenity.com\"}{{/parseJson}} {{{jwt maxAge='1 hours' sub=(toString cem) }}}",
+
+    // Basit örnek 1:
+    // "body": "{{#parseJson 'parsedObj'}}{ \"name\": \"transformed\" }{{/parseJson}}{{parsedObj}}",
+    // Çıktı: {name=transformed}
+
+    // Basit örnek 2:
+    // "body": "{{#parseJson 'parsedObj'}}{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"uid\": 311, \"username\": \"admin\" } }{{/parseJson}}{{parsedObj}}",
+    // Çıktı: {cmpfToken={hash=6bfa249f, uid=311, username=admin}}
+
+    // Basit örnek 3:
+    // "body": "{{toJson (array 1 2 3) }}",
+    // [ 1, 2, 3 ]
+
+    // Basit örnek 4:
+    // "body": "{\"keywords\": \"{{{jsonPath request.body '$.username'}}}\"}",
+    // Çıktı: {"keywords": "admin"}
+
+    // Basit örnek 5:
+    // "body": "{\"keywords\": \"{{{jsonPath request.body '$'}}}\"}",
+    // Çıktı: curl -X POST http://a3gw/parsejson  -H "Content-Type: application/json"   -d '{"username":"admin","password":"test","rememberMe":false}'
+    // {"keywords": "{
+    //   "username" : "admin",
+    //   "password" : "test",
+    //   "rememberMe" : false
+    // }"}
+
+    // Basit örnek 6:
+    // "body": "{\"keywords\": {{jsonPath request.body '$'}} }",
+    // Çıktı: curl -X POST http://a3gw/parsejson  -H "Content-Type: application/json"   -d '{"username":"admin","password":"test","rememberMe":false}'
+    // {"keywords": {
+    //   "username" : "admin",
+    //   "password" : "test",
+    //   "rememberMe" : false
+    // } }
+
+    // // Basit örnek 7:
+    // "body": "{{#parseJson 'parsedObj'}}{\"username\" : \"admin\",\"password\" : \"test\",\"rememberMe\" : false}{{/parseJson}}{\"keywords\": {{jsonPath parsedObj '$'}} }",
+    // Çıktı:  curl -X POST http://a3gw/parsejson  -H "Content-Type: application/json"   -d '{"username":"admin","password":"test","rememberMe":false}'
+    // {"keywords": {
+    //   "username" : "admin",
+    //   "password" : "test",
+    //   "rememberMe" : false
+    // } }
+
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

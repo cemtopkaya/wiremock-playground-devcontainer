@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/parsejson3toJson"
+  },
+  "response": {
+    "status": 200,
+    "body": "{{#parseJson 'parsedObj'}}{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"uid\": 311, \"username\": \"admin\" } }{{/parseJson}}{{parsedObj}}{{toJson parsedObj}}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

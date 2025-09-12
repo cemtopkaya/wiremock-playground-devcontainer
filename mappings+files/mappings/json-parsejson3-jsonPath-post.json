@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/parsejson3jsonPath",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"username\":\"admin\",\"password\":\"test\",\"rememberMe\":false}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{{#parseJson 'parsedObj'}}{\"username\" : \"admin\",\"password\" : \"test\",\"rememberMe\" : false}{{/parseJson}}{\"keywords\": {{jsonPath parsedObj '$'}} }",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

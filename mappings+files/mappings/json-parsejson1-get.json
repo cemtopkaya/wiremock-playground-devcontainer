@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/parsejson1"
+  },
+  "response": {
+    "status": 200,
+    "body": "{{#parseJson 'parsedObj'}}{ \"name\": \"transformed\" }{{/parseJson}}{{parsedObj}}",
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
