@@ -1,0 +1,81 @@
+{{#parseJson 'data'}}
+{
+  "sub": {
+    "cmpfToken": {
+      "hash": "6bfa249f",
+      "token": "95ce31a5",
+      "uid": 311,
+      "oid": 282
+    },
+    "username": "user@company.com"
+  },
+  "resourceName": "Portal Project",
+  "jti": "9c52d2d2-a6c2-4e71-bb5d-05bb7c287206",
+  "iat": 1756794036,
+  "exp": 1756797636
+}
+{{/parseJson}}
+
+{{#assign 'tokenLiteral'}}
+{
+  "sub": {{{jsonPath data '$.sub'}}},
+  "jti": "{{{jsonPath tokenClaim '$.jti'}}}",
+  "resourceName": "{{{jsonPath data '$.resourceName'}}}",
+  "iat": {{now timezone='Europe/Istanbul' format='epoch'}},
+  "exp": {{now timezone='Europe/Istanbul' offset='now +1 hours' format='epoch'}}
+}
+{{/assign}}
+
+{{#assign 'refreshTokenLiteral'}}
+{
+  "sub": {{{jsonPath data '$.sub'}}},
+  "jti": "{{{jsonPath tokenClaim '$.jti'}}}",
+  "resourceName": "{{{jsonPath data '$.resourceName'}}}",
+  "iat": {{now timezone='Europe/Istanbul' format='epoch'}},
+  "exp": {{now timezone='Europe/Istanbul' offset='now +1 hours' format='epoch'}},
+  "nbf": {{now timezone='Europe/Istanbul' offset='now +50 minutes' format='epoch'}},
+  "refreshOnly": true
+}
+{{/assign}}
+
+{{!-- Sabit bir değer olacak ve {"alg": "HS256","typ": "JWT"} değerinin base64 kodlu hali olacak --}}
+{{#assign 'header'}}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+{{/assign}}
+
+{{!--
+İmzaymış gibi sabit bir değer verilebilir : .KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
+veya dinamik değer üretilebilir           : .{{randomValue type='ALPHANUMERIC' length=43}}
+--}}
+{{#assign 'signature'}}
+.{{randomValue type='ALPHANUMERIC' length=43}}
+{{/assign}}
+
+{{#assign 'tokenPayload'}}
+{{base64 tokenLiteral}}
+{{/assign}}
+
+{{#assign 'refreshTokenPayload'}}
+{{base64 refreshTokenLiteral}}
+{{/assign}}
+
+{{!-- AÇIKLAMA:
+Base64 ve Base64Url aynı temel encoding şemasıdır ama Base64Url, Base64'ün URL ve dosya isimlerinde kullanılmaya uygun hale getirilmiş bir varyantıdır. Aralarındaki farklar şunlardır:
+- Base64'te kullanılan '+' ve '/' karakterleri Base64Url'de '-' ve '_' ile değiştirilir.
+- Base64'te padding için '=' karakteri kullanılırken, Base64Url'de padding genellikle kaldırılır (opsiyoneldir).
+- Böylece Base64Url çıktısı URL içinde güvenle kullanılabilir, Base64 ise URL'de kullanıldığında ekstra encode gerekebilir.
+--}}
+
+
+{{#assign 'tokenPayload'}}{{replace tokenPayload "=" ""}}{{/assign}}
+{{#assign 'tokenPayload'}}{{replace tokenPayload "+" "-"}}{{/assign}}
+{{#assign 'tokenPayload'}}{{replace tokenPayload "/" "_"}}{{/assign}}
+
+{{#assign 'refreshTokenPayload'}}{{replace refreshTokenPayload "=" ""}}{{/assign}}
+{{#assign 'refreshTokenPayload'}}{{replace refreshTokenPayload "+" "-"}}{{/assign}}
+{{#assign 'refreshTokenPayload'}}{{replace refreshTokenPayload "/" "_"}}{{/assign}}
+
+{
+  "token": "{{header}}{{tokenPayload}}{{signature}}",
+  "refreshToken": "{{header}}{{refreshTokenPayload}}{{signature}}"
+}

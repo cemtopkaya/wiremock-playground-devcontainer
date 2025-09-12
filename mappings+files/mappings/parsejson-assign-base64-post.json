@@ -1,0 +1,50 @@
+{
+  "request": {
+    "url": "/parsejson-assign-base64-post",
+    "method": "POST",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"username\":\"user@company.com\",\"password\":\"sifre123\",\"captcha\":\"MBi8b\",\"rememberMe\":false}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "parsejson-assign-base64-body.json",
+    // "body": "{\"token\": \"{{{jwt maxAge='1 hours' jti='9c52d2d2-a6c2-4e71-bb5d-05bb7c287206' sub='{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"token\": \"95ce31a5\", \"uid\": 311, \"oid\": 282}, \"username\": \"ertugruls@telenity.com\" }' resourceName='Enkudo Partner Portal'}}}\", \"refreshToken\": \"{{{jwt maxAge='1 hours' jti='9c52d2d2-a6c2-4e71-bb5d-05bb7c287206' sub='{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"token\": \"95ce31a5\", \"uid\": 311, \"oid\": 282}, \"username\": \"ertugruls@telenity.com\" }' resourceName='Enkudo Partner Portal'}}}\" }",
+    "transformers": ["response-template"],
+    "transformerParameters": {
+      "hash": "6bfa249f",
+      "cmpfToken": "95ce31a5",
+      "uid": 311,
+      "oid": 282,
+      "username": "ertugruls@telenity.com",
+      "resourceName": "Enkudo Partner Portal",
+      "jti": "{{randomValue type='UUID'}}",
+      "iat": "{{now timezone='Europe/Istanbul'}}",
+      "exp": "{{now timezone='Europe/Istanbul' offset='now +5 hours'}}"
+    },
+    "headers": {
+      "Server": "nginx",
+      "X-Iinfo": "54-143178181-143173302 PNYN RT(1756794036749 17) q(0 0 0 -1) r(2 2) U24",
+      "Access-Control-Allow-Methods": "GET, HEAD",
+      "X-Content-Type-Options": "nosniff",
+      "Access-Control-Allow-Headers": "Msisdn, apiKey",
+      "Date": "{{now format='EEE, dd MMM yyyy HH:mm:ss' timezone='GMT'}} GMT",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Access-Control-Expose-Headers": "Origin",
+      "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
+      "X-CDN": "Imperva",
+      "Access-Control-Allow-Credentials": "true",
+      "Content-Security-Policy": [
+        "default-src 'self' 'unsafe-eval' 'unsafe-inline' blob:; connect-src 'self' blob:  https://notify.dcbprotect.com http://notify.dcbprotect.com; img-src 'self' data: blob:;",
+        "default-src 'self' http://telecel-test.telenity.com https://telecel-test.telenity.com; connect-src 'self' http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://sdptest.telecel.com.gh http://telecel-test.telenity.com; img-src 'self' data: blob: http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; style-src 'self' 'unsafe-inline' http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; font-src 'self' http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; frame-src http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; object-src 'self' blob: data: http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh"
+      ],
+      "X-XSS-Protection": "1; mode=block",
+      "X-Powered-By": "Express",
+      "Content-Type": "application/json"
+    }
+  }
+}
