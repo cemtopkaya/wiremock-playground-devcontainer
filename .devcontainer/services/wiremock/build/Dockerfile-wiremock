@@ -2,6 +2,7 @@
 FROM eclipse-temurin:11-jre AS base
 
 # --- Wiremock Ayarları ------------------------------------------------------
+ENV WIREMOCK_DIRECTORY=/home/wiremock
 ENV WIREMOCK_VERSION=3.13.1
 ENV WIREMOCK_PORT=8080
 

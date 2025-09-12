@@ -53,7 +53,7 @@
                 "command": "echo ${workspaceFolder}"
             },
             {
-                "label": "start or restart wiremock_test",
+                "label": "start or restart wiremock_test_service",
                 "type": "shell",
                 "command": "if [ $(docker ps -q -f name=wiremock_test) ]; then docker restart wiremock_test; else docker compose -f .devcontainer/docker-compose.yml up -d wiremock_test; fi",
                 "problemMatcher": [],
@@ -62,18 +62,18 @@
                 }
             },
             {
-                "label": "stop wiremock_test",
+                "label": "stop wiremock_test_service",
                 "type": "shell",
-                "command": "docker stop wiremock_test",
+                "command": "docker stop wiremock_test_service",
                 "problemMatcher": [],
                 "options": {
                     "cwd": "${workspaceFolder:all}"
                 }
             },
             {
-                "label": "show logs wiremock_test",
+                "label": "show logs wiremock_test_service",
                 "type": "shell",
-                "command": "docker logs -f wiremock_test",
+                "command": "docker logs -f wiremock_test_service",
                 "problemMatcher": [],
                 "options": {
                     "cwd": "${workspaceFolder:all}"

@@ -1,7 +1,10 @@
+name: wiremock_playground_project
+
 # This file is used to define the services and networks for the development environment.
 x-common-env: &common-variables # Containers will be setted to the same time zone as the host
   TZ: 'Europe/Istanbul'
-  WIREMOCK_PORT: 80
+  WIREMOCK_PORT: ${WIREMOCK_PORT:-8080}
+  COMPOSE_PROJECT_NAME: wiremock_playground
 
 networks:
   wiremock_devnet:
@@ -26,7 +29,7 @@ services:
     #     '--port',
     #     '${WIREMOCK_PORT}',
     #     '--root-dir',
-    #     '/home/wiremock',
+    #     '${WIREMOCK_DIRECTORY}',
     #     '--proxy-all=http://devcontainer:8080',
     #     '--extensions',
     #     'org.wiremock.webhooks.Webhooks',
@@ -42,16 +45,16 @@ services:
       start_period: 30s
     environment:
       <<: *common-variables
+      WIREMOCK_DIRECTORY: ${WIREMOCK_DIRECTORY}
     # ports:
     #   - '80:80'
-    working_dir: /home/wiremock
+    working_dir: ${WIREMOCK_DIRECTORY}
     volumes:
       - ${WORKSPACE_PATH_ON_HOST}:${WORKSPACE_PATH_ON_HOST}:cached
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:${WIREMOCK_DIRECTORY}:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - ~/.ssh:/root/.ssh:ro
       - ~/.gitconfig:/root/.gitconfig:ro
-      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:/home/wiremock/mappings+files
-      - ${WORKSPACE_PATH_ON_HOST}/.devcontainer/services/wiremock/volume/extensions:/var/wiremock/extensions
     tty: true
     networks:
       wiremock_devnet:
@@ -67,9 +70,9 @@ services:
       - '8084:8088'
     command: '--port 8089 --https-port 8088 --max-request-journal 1000 --local-response-templating'
     volumes:
-      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:/home/wiremock
+      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:${WIREMOCK_DIRECTORY}:rw
     environment:
-      WIREMOCK_MY_VAR: 'systemValue response templating feature'
+      WIREMOCK_DIRECTORY: ${WIREMOCK_DIRECTORY}
     healthcheck:
       test:
         - 'CMD-SHELL'
@@ -84,7 +87,7 @@ services:
           - wiremock_ui
 
   wiremock_test:
-    container_name: wiremock_test
+    container_name: wiremock_test_service
     image: cemt/wiremock:3.13.1
     entrypoint: ['/docker-entrypoint.sh']
     command:
@@ -95,7 +98,7 @@ services:
         '--port',
         '${WIREMOCK_PORT}',
         '--root-dir',
-        '/home/wiremock/mappings+files',
+        '${WIREMOCK_DIRECTORY}',
         '--proxy-all=http://google.com',
         '--extensions',
         'org.wiremock.webhooks.Webhooks',
@@ -103,16 +106,10 @@ services:
       ]
     environment:
       <<: *common-variables
-    ports:
-      - '80:${WIREMOCK_PORT}'
-    working_dir: /home/wiremock
+      WIREMOCK_DIRECTORY: ${WIREMOCK_DIRECTORY}
+    working_dir: ${WIREMOCK_DIRECTORY}
     volumes:
-      - ${WORKSPACE_PATH_ON_HOST}:${WORKSPACE_PATH_ON_HOST}:cached
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ~/.ssh:/root/.ssh:ro
-      - ~/.gitconfig:/root/.gitconfig:ro
-      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:/home/wiremock/mappings+files
-      - ${WORKSPACE_PATH_ON_HOST}/.devcontainer/services/wiremock/volume/extensions:/var/wiremock/extensions
+      - ${WORKSPACE_PATH_ON_HOST}/mappings+files:${WIREMOCK_DIRECTORY}
     tty: true
     networks:
       wiremock_devnet:
@@ -120,3 +117,4 @@ services:
           - wiremock-test
           - wiremock
           - test
+

@@ -23,6 +23,7 @@ set_workspace() {
 
   # For volume binding in docker-compose-dev.yml we need the absolute path of the workspace on the host
   write_to_env "WORKSPACE_PATH_ON_HOST" "$CURRENT_WORKSPACE_PATH"
+  write_to_env "WIREMOCK_DIRECTORY" "/home/wiremock/mappings+files"
   write_to_env "WIREMOCK_PORT" "80"
 
   # Also create any necessary directories in the container path structure

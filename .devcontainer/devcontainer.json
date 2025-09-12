@@ -4,21 +4,16 @@
         "./docker-compose.yml"
     ],
     "service": "wiremock",
-    // "runServices": [
-    //   "wiremock",
-    //   "wiremock_ui"
-    //   "wiremock_test"
-    // ],
+    "runServices": [
+        "wiremock",
+        // "wiremock_ui",
+        // "wiremock_test"
+    ],
     "remoteEnv": {
         "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
-        "COMPOSE_PROJECT_NAME": "wiremock_playground",
-        "WORKSPACE_PATH_ON_HOST": "${WORKSPACE_PATH_ON_HOST}",
-        "WIREMOCK_PORT": "${WIREMOCK_PORT}"
+        "COMPOSE_PROJECT_NAME": "wiremock_playground_project"
     },
     "containerEnv": {
-        "WORKSPACE_PATH_ON_HOST": "${WORKSPACE_PATH_ON_HOST}",
-        "COMPOSE_PROJECT_NAME": "wiremock_playground",
-        "WIREMOCK_PORT": "${WIREMOCK_PORT}"
     },
     "workspaceFolder": "${localWorkspaceFolder}",
     "customizations": {
@@ -161,5 +156,5 @@
         ]
     },
     "containerUser": "root",
-    "initializeCommand": "echo --------- && pwd && ./.devcontainer/scripts/initializeCommand.sh"
+    "initializeCommand": "./.devcontainer/scripts/initializeCommand.sh"
 }
