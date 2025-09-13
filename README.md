@@ -2,19 +2,85 @@
 
 Wiremock denemeleri için konteyneri ayaklandırıyorum. Bu pratik yapmak için klavye kısayollarıyla: Ctrl+Shift+P -> Run Task -> "start or restart wiremock_test"
 
+[WireMock Documentation](https://docs.wiremock.io/overview)
 
-### Zaman ve Tarih
+## randomValue
+
+[Response Templating - Random Values](https://docs.wiremock.io/response-templating/random-values)
 
 ```json
 {
-    "request": {
-        "method": "GET",
+  "request": {
+    "method": "GET",
+    "urlPath": "/randomValue"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "alphanumeric": "{{randomValue length=33 type='ALPHANUMERIC'}}",
+      "alphabetic1": "{{randomValue length=55 type='ALPHABETIC'}}",
+      "alphabetic2": "{{randomValue length=27 type='ALPHABETIC' uppercase=true}}",
+      "numeric": "{{randomValue length=10 type='NUMERIC'}}",
+      "uuid": "{{randomValue type='UUID'}}",
+      "randomInt1": "{{randomInt}}",
+      "randomInt2": "{{randomInt lower=5 upper=9}}",
+      "randomInt3": "{{randomInt upper=54323}}",
+      "randomInt4": "{{randomInt lower=-24}}",
+      "randomDecimal1": "{{randomDecimal}}",
+      "randomDecimal2": "{{randomDecimal lower=-10.1 upper=-0.9}}",
+      "randomDecimal3": "{{randomDecimal upper=12.5}}",
+      "randomDecimal4": "{{randomDecimal lower=-24.01}}"
+    },
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache"
+    }
+  }
+}
+```
+
+```rest
+GET http://test/randomValue HTTP/1.1
+```
+
+```text
+HTTP/1.1 200 OK
+Connection: close
+Content-Type: application/json
+Cache-Control: no-cache
+Matched-Stub-Id: 8ffaa928-231f-4d72-8453-927420c17177
+
+{
+  "alphanumeric": "j7dzfsxtiueu2xqpziqirhdqpqidflnrt",
+  "alphabetic1": "szckitiaehegglsiusydccslhrxzddowhdqqoqegzgqwporwumbiich",
+  "alphabetic2": "GLLAUKLGKUELYIDXGHPMFVJNKOU",
+  "numeric": "0614345623",
+  "uuid": "81ce2772-23f8-4b25-a368-c79af339503b",
+  "randomInt1": "-165519695",
+  "randomInt2": "5",
+  "randomInt3": "-26045993",
+  "randomInt4": "1376955655",
+  "randomDecimal1": "8.763276574020132E307",
+  "randomDecimal2": "-4.451129394912378",
+  "randomDecimal3": "1.8390171303426337",
+  "randomDecimal4": "6.748674390946351E307"
+}
+```
+
+## Zaman ve Tarih
+
+```json
+{
+  "request": {
+    "method": "GET",
     "url": "/now"
   },
   "response": {
-      "status": 200,
+    "status": 200,
     "jsonBody": {
-        "now": "{{now timezone='Europe/Istanbul'}}",
+      "now": "{{now timezone='Europe/Istanbul'}}",
+      "bicimli_zaman": "Şu anda saat: {{now format='hh:mm:ss'}}",
       "after": "{{now timezone='Europe/Istanbul' offset='now +5 hours'}}",
       "before": "{{now timezone='Europe/Istanbul' offset='now -11 minutes'}}",
       "epoch": "{{now format='epoch'}}",
@@ -42,14 +108,14 @@ Content-Type: application/json
 Matched-Stub-Id: 99d3c4be-628f-4aea-a09b-0339d2602ba9
 
 {
-  "now": "2025-09-11T19:46:40+03:00",
-  "after": "2025-09-12T00:46:40+03:00",
-  "before": "2025-09-11T19:35:40+03:00",
-  "epoch": "1757609200185",
-  "unix": "1757609200"
+  "now": "2025-09-13T14:29:05+03:00",
+  "bicimli_zaman": "Şu anda saat: 02:29:05",
+  "after": "2025-09-13T19:29:05+03:00",
+  "before": "2025-09-13T14:18:05+03:00",
+  "epoch": "1757762945165",
+  "unix": "1757762945"
 }
 ```
-
 
 ## json Eklentisi
 
@@ -87,7 +153,6 @@ Matched-Stub-Id: 31556ae2-d850-4df3-bf3c-f5dd09bb4666
 {name=transformed}
 ```
 
-
 ### parseJson 2
 
 ```json
@@ -121,7 +186,6 @@ Matched-Stub-Id: edb8b0a7-4c21-4a5e-a21f-158199325aae
 
 {cmpfToken={hash=6bfa249f, uid=311, username=admin}}
 ```
-
 
 ### parseJson 3 toJson 1
 
@@ -162,7 +226,6 @@ Matched-Stub-Id: d6b1be4a-d0f4-4b36-8c6b-e618f486c95b
   }
 }
 ```
-
 
 ### toJson 2
 
@@ -251,7 +314,6 @@ Matched-Stub-Id: ae2348f3-a1d8-4bbc-ae16-6b1a056e25c5
 }
 ```
 
-
 ### parseJson 5
 
 ```json
@@ -305,10 +367,10 @@ Matched-Stub-Id: d8fa79f6-6811-470d-9a6c-618da5a6dda2
 }
 ```
 
-
 ### parseJson 6 jsonPath 2
 
 ```json
+
 ```
 
 ```rest
@@ -324,12 +386,13 @@ POST http://test/parsejson3jsonPath HTTP/1.1
 Sonuç:
 
 ```text
-```
 
+```
 
 ### parseJson 7
 
 ```json
+
 ```
 
 ```rest
@@ -339,8 +402,8 @@ GET http://test/now HTTP/1.1
 Sonuç:
 
 ```text
-```
 
+```
 
 ## JWT Eklentisi
 
@@ -434,7 +497,6 @@ Matched-Stub-Id: 119dd039-6968-363d-b6c8-5b9123b85b0d
 }
 ```
 
-
 ### JWT Token 2 - base64
 
 ```json
@@ -442,7 +504,6 @@ Matched-Stub-Id: 119dd039-6968-363d-b6c8-5b9123b85b0d
   "token": "{{{base64 iat=(now timezone='Europe/Istanbul')  maxAge='1 hours' jti='9c52d2d2-a6c2-4e71-bb5d-05bb7c287206' sub='{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"token\": \"95ce31a5\", \"uid\": 311, \"oid\": 282}, \"username\": \"user@company.com\" }' }}}",
   "refreshToken": "{{{jwt refreshOnly=true maxAge='1 hours' jti='9c52d2d2-a6c2-4e71-bb5d-05bb7c287206' sub='{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"token\": \"95ce31a5\", \"uid\": 311, \"oid\": 282}, \"username\": \"cuser@company.com\" }' }}}"
 }
-
 ```
 
 ```rest

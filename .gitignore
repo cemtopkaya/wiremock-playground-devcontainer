@@ -1,3 +1,4 @@
-/.DS_Store
+.DS_Store
 .devcontainer/.DS_Store
 .devcontainer/.env
+.devcontainer/services/.DS_Store
