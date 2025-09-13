@@ -87,7 +87,7 @@ services:
           - wiremock_ui
 
   wiremock_test:
-    container_name: wiremock_test_service
+    container_name: wiremock_test
     image: cemt/wiremock:3.13.1
     entrypoint: ['/docker-entrypoint.sh']
     command:
@@ -117,4 +117,3 @@ services:
           - wiremock-test
           - wiremock
           - test
-
