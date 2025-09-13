@@ -1,0 +1,4 @@
+{
+  "token": "{{{base64 iat=(now timezone='Europe/Istanbul')  maxAge='1 hours' jti='9c52d2d2-a6c2-4e71-bb5d-05bb7c287206' sub='{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"token\": \"95ce31a5\", \"uid\": 311, \"oid\": 282}, \"username\": \"user@company.com\" }' }}}",
+  "refreshToken": "{{{jwt refreshOnly=true maxAge='1 hours' jti='9c52d2d2-a6c2-4e71-bb5d-05bb7c287206' sub='{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"token\": \"95ce31a5\", \"uid\": 311, \"oid\": 282}, \"username\": \"cuser@company.com\" }' }}}"
+}

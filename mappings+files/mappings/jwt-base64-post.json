@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/jwt-base64",
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"username\":\"user@company.com\",\"password\":\"sifre123\",\"captcha\":\"MBi8b\",\"rememberMe\":false}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "jwt-base64-post-body.json",
+    "transformers": ["response-template"],
+    "headers":{
+      "Content-Type": "application/json"
+    }
+  }
+}

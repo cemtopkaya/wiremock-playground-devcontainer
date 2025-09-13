@@ -342,21 +342,9 @@ Sonuç:
 ```
 
 
-### parseJson 8
+## JWT Eklentisi
 
-```json
-```
-
-```rest
-GET http://test/now HTTP/1.1
-```
-
-Sonuç:
-
-```text
-```
-
-### JWT Eklentisiyle Token Üretmek
+### JWT Token 1
 
 ```json
 {
@@ -447,66 +435,24 @@ Matched-Stub-Id: 119dd039-6968-363d-b6c8-5b9123b85b0d
 ```
 
 
-### JWT Eklentisiyle Token Üretmek
+### JWT Token 2 - base64
 
 ```json
 {
-  "id": "119dd039-6968-363d-b6c8-5b9123b85b0d",
-  "request": {
-    "url": "/jwt-auth",
-    "method": "POST",
-
-    "bodyPatterns": [
-      {
-        "equalToJson": "{\"username\":\"user@company.com\",\"password\":\"sifre123\",\"captcha\":\"MBi8b\",\"rememberMe\":false}",
-        "ignoreArrayOrder": true,
-        "ignoreExtraElements": true
-      }
-    ]
-  },
-  "response": {
-    "status": 200,
-    "body": "{\"token\": \"{{{jwt maxAge='1 hours' jti='parameters.jti' sub='parameters.username' resourceName='Portal Project'}}}\" }",
-    "transformers": ["response-template"],
-    "transformerParameters": {
-      "uid": 311,
-      "oid": 282,
-      "username": "user@company.com",
-      "jti": "9c52d2d2-a6c2-4e71-bb5d-05bb7c287206"
-    },
-    "headers": {
-      "Server": "nginx",
-      "X-Iinfo": "54-143178181-143173302 PNYN RT(1756794036749 17) q(0 0 0 -1) r(2 2) U24",
-      "Access-Control-Allow-Methods": "GET, HEAD",
-      "X-Content-Type-Options": "nosniff",
-      "Access-Control-Allow-Headers": "Msisdn, apiKey",
-      "Date": "{{now format='EEE, dd MMM yyyy HH:mm:ss' timezone='GMT'}} GMT",
-      "X-Frame-Options": "SAMEORIGIN",
-      "Access-Control-Expose-Headers": "Origin",
-      "Strict-Transport-Security": "max-age=31536000; includeSubdomains; preload",
-      "X-CDN": "Imperva",
-      "Access-Control-Allow-Credentials": "true",
-      "Content-Security-Policy": [
-        "default-src 'self' 'unsafe-eval' 'unsafe-inline' blob:; connect-src 'self' blob:  https://notify.dcbprotect.com http://notify.dcbprotect.com; img-src 'self' data: blob:;",
-        "default-src 'self' http://telecel-test.telenity.com https://telecel-test.telenity.com; connect-src 'self' http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://sdptest.telecel.com.gh http://telecel-test.telenity.com; img-src 'self' data: blob: http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; style-src 'self' 'unsafe-inline' http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; font-src 'self' http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; frame-src http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; object-src 'self' blob: data: http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh"
-      ],
-      "X-XSS-Protection": "1; mode=block",
-      "X-Powered-By": "Express",
-      "Content-Type": "application/json"
-    }
-  },
-  "uuid": "119dd039-6968-363d-b6c8-5b9123b85b0d"
+  "token": "{{{base64 iat=(now timezone='Europe/Istanbul')  maxAge='1 hours' jti='9c52d2d2-a6c2-4e71-bb5d-05bb7c287206' sub='{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"token\": \"95ce31a5\", \"uid\": 311, \"oid\": 282}, \"username\": \"user@company.com\" }' }}}",
+  "refreshToken": "{{{jwt refreshOnly=true maxAge='1 hours' jti='9c52d2d2-a6c2-4e71-bb5d-05bb7c287206' sub='{\"cmpfToken\": { \"hash\": \"6bfa249f\", \"token\": \"95ce31a5\", \"uid\": 311, \"oid\": 282}, \"username\": \"cuser@company.com\" }' }}}"
 }
+
 ```
 
 ```rest
-POST http://test/parsejson-assign-base64-post HTTP/1.1
+POST http://test/jwt-base64 HTTP/1.1
 
 {
     "username":"user@company.com",
     "password":"sifre123",
-    "captcha":"MBi8b",
-    "rememberMe":false
+    "rememberMe":false,
+    "captcha": "MBi8b"
 }
 ```
 
@@ -515,27 +461,11 @@ Sonuç:
 ```text
 HTTP/1.1 200 OK
 Connection: close
-Server: nginx
-X-Iinfo: 54-143178181-143173302 PNYN RT(1756794036749 17) q(0 0 0 -1) r(2 2) U24
-Access-Control-Allow-Methods: GET, HEAD
-X-Content-Type-Options: nosniff
-Access-Control-Allow-Headers: Msisdn, apiKey
-Date: Fri, 12 Sep 2025 01:33:18 GMT
-X-Frame-Options: SAMEORIGIN
-Access-Control-Expose-Headers: Origin
-Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
-X-CDN: Imperva
-Access-Control-Allow-Credentials: true
-Content-Security-Policy: default-src 'self' 'unsafe-eval' 'unsafe-inline' blob:; connect-src 'self' blob:  https://notify.dcbprotect.com http://notify.dcbprotect.com; img-src 'self' data: blob:;, default-src 'self' http://telecel-test.telenity.com https://telecel-test.telenity.com; connect-src 'self' http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://sdptest.telecel.com.gh http://telecel-test.telenity.com; img-src 'self' data: blob: http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; style-src 'self' 'unsafe-inline' http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; font-src 'self' http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; frame-src http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh; object-src 'self' blob: data: http://telecel-test.telenity.com https://telecel-test.telenity.com http://sdptest.telecel.com.gh https://sdptest.telecel.com.gh
-X-XSS-Protection: 1; mode=block
-X-Powered-By: Express
 Content-Type: application/json
-Matched-Stub-Id: 96d6874b-5fba-4b30-9918-aaff2b310232
+Matched-Stub-Id: d58e0fce-a5ce-4a45-8f7a-685db9457520
 
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJzdWIiOiB7CiAgImNtcGZUb2tlbiIgOiB7CiAgICAiaGFzaCIgOiAiNmJmYTI0OWYiLAogICAgInRva2VuIiA6ICI5NWNlMzFhNSIsCiAgICAidWlkIiA6IDMxMSwKICAgICJvaWQiIDogMjgyCiAgfSwKICAidXNlcm5hbWUiIDogInVzZXJAY29tcGFueS5jb20iCn0sCiAgImp0aSI6ICIiLAogICJyZXNvdXJjZU5hbWUiOiAiUG9ydGFsIFByb2plY3QiLAogICJpYXQiOiAxNzU3NjQwNzk4MzExLAogICJleHAiOiAxNzU3NjQ0Mzk4MzEzCn0.hefveqzyp0ar53cppfwxffs944imumkxy6xdbfeldgf",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ewogICJzdWIiOiB7CiAgImNtcGZUb2tlbiIgOiB7CiAgICAiaGFzaCIgOiAiNmJmYTI0OWYiLAogICAgInRva2VuIiA6ICI5NWNlMzFhNSIsCiAgICAidWlkIiA6IDMxMSwKICAgICJvaWQiIDogMjgyCiAgfSwKICAidXNlcm5hbWUiIDogInVzZXJAY29tcGFueS5jb20iCn0sCiAgImp0aSI6ICIiLAogICJyZXNvdXJjZU5hbWUiOiAiUG9ydGFsIFByb2plY3QiLAogICJpYXQiOiAxNzU3NjQwNzk4MzE0LAogICJleHAiOiAxNzU3NjQ0Mzk4MzE0LAogICJuYmYiOiAxNzU3NjQzNzk4MzE0LAogICJyZWZyZXNoT25seSI6IHRydWUKfQ.hefveqzyp0ar53cppfwxffs944imumkxy6xdbfeldgf"
+  "token": "e3JlcXVlc3Q9Y29tLmdpdGh1Yi50b21ha2VodXJzdC53aXJlbW9jay5leHRlbnNpb24ucmVzcG9uc2V0ZW1wbGF0aW5nLlJlcXVlc3RUZW1wbGF0ZU1vZGVsQDVkODM4YjA0LCBwYXJhbWV0ZXJzPXt9fQ==",
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTc3NDU4NTAsImlhdCI6MTc1Nzc0MjI1MCwiaXNzIjoid2lyZW1vY2siLCJhdWQiOiJ3aXJlbW9jay5pbyIsInN1YiI6IntcXFwiY21wZlRva2VuXFxcIjogeyBcXFwiaGFzaFxcXCI6IFxcXCI2YmZhMjQ5ZlxcXCIsIFxcXCJ0b2tlblxcXCI6IFxcXCI5NWNlMzFhNVxcXCIsIFxcXCJ1aWRcXFwiOiAzMTEsIFxcXCJvaWRcXFwiOiAyODJ9LCBcXFwidXNlcm5hbWVcXFwiOiBcXFwiY3VzZXJAY29tcGFueS5jb21cXFwiIH0iLCJyZWZyZXNoT25seSI6dHJ1ZSwibWF4QWdlIjoiMSBob3VycyIsImp0aSI6IjljNTJkMmQyLWE2YzItNGU3MS1iYjVkLTA1YmI3YzI4NzIwNiJ9.PMGPr50OVL_52UAMjs-qSTLNaue2Hm5t2-dnn07CmWg"
 }
 ```
-
-
