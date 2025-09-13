@@ -7,6 +7,7 @@
     "status": 200,
     "jsonBody": {
       "now": "{{now timezone='Europe/Istanbul'}}",
+      "bicimli_zaman": "Şu anda saat: {{now format='hh:mm:ss'}}",
       "after": "{{now timezone='Europe/Istanbul' offset='now +5 hours'}}",
       "before": "{{now timezone='Europe/Istanbul' offset='now -11 minutes'}}",
       "epoch": "{{now format='epoch'}}",

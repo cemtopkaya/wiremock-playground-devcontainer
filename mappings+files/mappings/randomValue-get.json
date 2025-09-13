@@ -1,0 +1,29 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/randomValue"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "alphanumeric": "{{randomValue length=33 type='ALPHANUMERIC'}}",
+      "alphabetic1": "{{randomValue length=55 type='ALPHABETIC'}}",
+      "alphabetic2": "{{randomValue length=27 type='ALPHABETIC' uppercase=true}}",
+      "numeric": "{{randomValue length=10 type='NUMERIC'}}",
+      "uuid": "{{randomValue type='UUID'}}",
+      "randomInt1": "{{randomInt}}",
+      "randomInt2": "{{randomInt lower=5 upper=9}}",
+      "randomInt3": "{{randomInt upper=54323}}",
+      "randomInt4": "{{randomInt lower=-24}}",
+      "randomDecimal1": "{{randomDecimal}}",
+      "randomDecimal2": "{{randomDecimal lower=-10.1 upper=-0.9}}",
+      "randomDecimal3": "{{randomDecimal upper=12.5}}",
+      "randomDecimal4": "{{randomDecimal lower=-24.01}}"
+    },
+    "transformers": ["response-template"],
+    "headers": {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache"
+    }
+  }
+}
