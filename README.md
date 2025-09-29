@@ -530,3 +530,87 @@ Matched-Stub-Id: d58e0fce-a5ce-4a45-8f7a-685db9457520
   "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTc3NDU4NTAsImlhdCI6MTc1Nzc0MjI1MCwiaXNzIjoid2lyZW1vY2siLCJhdWQiOiJ3aXJlbW9jay5pbyIsInN1YiI6IntcXFwiY21wZlRva2VuXFxcIjogeyBcXFwiaGFzaFxcXCI6IFxcXCI2YmZhMjQ5ZlxcXCIsIFxcXCJ0b2tlblxcXCI6IFxcXCI5NWNlMzFhNVxcXCIsIFxcXCJ1aWRcXFwiOiAzMTEsIFxcXCJvaWRcXFwiOiAyODJ9LCBcXFwidXNlcm5hbWVcXFwiOiBcXFwiY3VzZXJAY29tcGFueS5jb21cXFwiIH0iLCJyZWZyZXNoT25seSI6dHJ1ZSwibWF4QWdlIjoiMSBob3VycyIsImp0aSI6IjljNTJkMmQyLWE2YzItNGU3MS1iYjVkLTA1YmI3YzI4NzIwNiJ9.PMGPr50OVL_52UAMjs-qSTLNaue2Hm5t2-dnn07CmWg"
 }
 ```
+
+## Webhook - Callback
+
+Bir istek yap wiremock'a, sana cevap dönsün ama arkada başka bir sayfaya istek yapsın:
+
+```sh
+curl -X POST -H "Content-Type: application" 'https://www.w3schools.com/action_page.php' -vvv -d "fname=John&lname=Doe"
+```
+
+```rest
+POST https://www.w3schools.com/action_page.php HTTP/1.1
+
+fname=John&lname=Doe
+```
+
+```json
+{
+  "request": {
+    "urlPath": "/callback",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "body": "Triggered"
+  },
+  "serveEventListeners": [
+    {
+      "name": "webhook",
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.w3schools.com/action_page.php",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "fname={{jsonPath originalRequest.query '$.name'}}&lname={{jsonPath originalRequest.query '$.surname'}}"
+      }
+    }
+  ]
+}
+```
+
+```text
+2025-09-30 00:36:54.241 Request received:
+10.10.11.34 - GET /callback?name=Cem&surname=topkaya
+
+Host: [ngssm]
+User-Agent: [curl/7.76.1]
+Accept: [*/*]
+
+
+
+Matched response definition:
+{
+  "status" : 200,
+  "body" : "Triggered"
+}
+
+Response:
+HTTP/1.1 200
+Matched-Stub-Id: [5ef7f8d1-28fd-4945-ab46-f092e427f172]
+
+2025-09-30 00:36:54.889 Webhook POST request to https://www.w3schools.com/action_page.php returned status 200
+
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<title>Forms action page</title>
+<link rel="stylesheet" href="/w3css/4/w3.css">
+<body class="w3-container">
+<h1>Submitted Form Data</h1>
+<h2>Your input was received as:</h2>
+<div class="w3-container w3-large w3-border" style="word-wrap:break-word">
+&nbsp;</div>
+
+<p>The server has processed your input and returned this answer.</p>
+
+<div class="w3-panel w3-pale-yellow w3-leftbar w3-border-yellow">
+<p><strong>Note:</strong> This tutorial will not teach you how servers are processing input.
+Processing input is explained in our <a href="/php/default.asp" target="_blank">PHP tutorial</a>.</p>
+</div>
+
+</body>
+</html>
+```

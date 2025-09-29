@@ -1,0 +1,23 @@
+{
+  "request": {
+    "urlPath": "/callback",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "body": "Triggered"
+  },
+  "serveEventListeners": [
+    {
+      "name": "webhook",
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.w3schools.com/action_page.php",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "fname={{jsonPath originalRequest.query '$.name'}}&lname={{jsonPath originalRequest.query '$.surname'}}"
+      }
+    }
+  ]
+}
