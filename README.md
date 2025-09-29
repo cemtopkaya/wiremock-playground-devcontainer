@@ -533,7 +533,24 @@ Matched-Stub-Id: d58e0fce-a5ce-4a45-8f7a-685db9457520
 
 ## Webhook - Callback
 
-Bir istek yap wiremock'a, sana cevap dönsün ama arkada başka bir sayfaya istek yapsın:
+Bir istek yap wiremock'a, sana hazır cevabını dönsün ama arkada başka bir sayfaya istek yapsın ve onun cevabını da wiremock günlüklerinde gör.
+Yapıyı anlayalım: 
+```json
+{
+  "request": {    <-------- ilk isteğin eşleştiği request özelliğini işliyoruz
+    "urlPath": "/callback",
+    "method": "GET"
+  },
+  "response": {   <-------- İlk isteğe dönecek cevabı response ile dönüyoruz ama 
+    "status": 200,
+    "body": "Triggered"
+  },
+  "serveEventListeners": [ <-------- Harici adreslere istekler atmak için dizi elemanı olarak yazıyoruz
+    ..                     <-------- ve yanıtlarını sadece günlüklerde görüyoruz
+    ....
+  ]
+}
+```
 
 ```sh
 curl -X POST -H "Content-Type: application" 'https://www.w3schools.com/action_page.php' -vvv -d "fname=John&lname=Doe"
